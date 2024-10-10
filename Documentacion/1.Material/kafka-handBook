@@ -1,0 +1,49 @@
+
+-- INICIAR KAFKA
+sh bin/zookeeper-server-start.sh config/zookeeper.properties
+sh bin/kafka-server-start.sh config/server.properties
+
+-- CREAR TOPIC
+bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic finytec-topic --partitions 5 --replication-factor 1
+
+bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic finytec-transactions --partitions 5 --replication-factor 4
+
+
+-- LISTAR TOPIC
+bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+
+-- VER DEFINICION DE UN TOPIC
+bin/kafka-topics.sh --describe --topic finytec-topic --bootstrap-server localhost:9092
+bin/kafka-topics.sh --describe --topic finytec-transactions --bootstrap-server localhost:9092
+
+-- MODIFICANDO UN TOPIC
+bin/kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic finytec-topic --partitions 10 
+
+
+-- VERIFICANDO CONFIGURACION VALIDAS PARA EL TOPIC
+bin/kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name finytec-topic --describe
+
+bin/kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name finytec-transactions --describe
+
+-- AGREGANDO CONFIGURACIONES A UN TOPIC
+bin/kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name finytec-topic --alter --add-config x=y (ERROR x no es un elemento de configs del topico)
+
+bin/kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name finytec-topic --alter --add-config retention.ms=604800000
+
+
+--BORRANDO UN TOPIC
+bin/kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic finytec-topic
+
+-- CREAR PRODUCER
+bin/kafka-console-producer.sh  --topic finytec-topic  --bootstrap-server localhost:9092
+
+bin/kafka-console-producer.sh  --topic finytec-transactions  --bootstrap-server localhost:9092
+
+-- CREAR CONSUMER
+bin/kafka-console-consumer.sh  --topic finytec-topic --from-beginning  --bootstrap-server localhost:9092 --property print.key=true --property key.separator="-"
+
+bin/kafka-console-consumer.sh  --topic finytec-transactions --from-beginning  --bootstrap-server localhost:9092 --property print.key=true --property key.separator="-"
+
+
+-- BORRAR INFORMACION
+rm -rf /tmp/kafka-logs /tmp/zookeeper

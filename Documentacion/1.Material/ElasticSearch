@@ -1,0 +1,96 @@
+GET http://localhost:9200/ – Verificar que Elasticsearch está funcionando.
+GET http://localhost:9200/_cat/indices?v – Listar todos los índices.
+GET http://localhost:9200/finytec-transactions/_search – Obtener todos los documentos de un índice.
+GET http://localhost:9200/finytec-transactions/_search?size=0 – Obtener todos los documentos de un índice.
+
+POST http://localhost:9200/finytec-transactions/_search – Buscar documentos con criterios específicos.
+POST http://localhost:9200/finytec-transactions/_doc/ – Crear un nuevo documento en un índice.
+DELETE http://localhost:9200/finytec-transactions – Eliminar un índice.
+
+
+
+
+
+localhost:9200
+
+1. Verificar que Elasticsearch está en funcionamiento
+Envía una solicitud GET a la URL base para verificar que el servicio de Elasticsearch está activo.
+
+Configuración:
+Método: GET
+URL: http://localhost:9200/
+Esto debería devolverte información básica de Elasticsearch, como la versión, el nombre del clúster, y el estado.
+
+2. Listar todos los índices
+Para ver todos los índices almacenados en Elasticsearch, puedes enviar una solicitud GET a la ruta _cat/indices.
+
+Configuración:
+Método: GET
+URL: http://localhost:9200/_cat/indices?v
+Esto te dará una lista de los índices, con detalles como el estado, el número de documentos y el tamaño de los datos almacenados.
+
+3. Obtener datos de un índice
+Si deseas obtener los documentos dentro de un índice específico, utiliza una solicitud GET a la URL correspondiente. Supongamos que tienes un índice llamado finytec-transactions.
+
+Configuración:
+Método: GET
+URL: http://localhost:9200/finytec-transactions/_search
+Esto te devolverá todos los documentos dentro del índice finytec-transactions. Si tienes muchos documentos, puede que necesites limitar la cantidad de resultados agregando el parámetro size.
+
+Ejemplo con limitación de resultados:
+Método: GET
+URL: http://localhost:9200/finytec-transactions/_search?size=10
+Esto te devolverá los primeros 10 documentos de finytec-transactions.
+
+4. Buscar documentos con criterios específicos
+Puedes buscar documentos dentro de un índice basado en criterios específicos usando una consulta JSON. Aquí tienes un ejemplo de cómo buscar documentos en un índice llamado finytec-transactions donde el campo name sea igual a "Juan".
+
+Configuración:
+Método: POST
+URL: http://localhost:9200/finytec-transactions/_search
+Body: Selecciona raw y elige JSON como tipo de datos
+JSON Body:
+json
+Copiar código
+{
+  "query": {
+    "match": {
+      "name": "Juan"
+    }
+  }
+}
+5. Crear un nuevo documento en un índice
+Para agregar un nuevo documento a un índice, realiza una solicitud POST con el documento en formato JSON.
+
+Configuración:
+Método: POST
+URL: http://localhost:9200/finytec-transactions/_doc/
+Body: Selecciona raw y elige JSON
+JSON Body:
+json
+Copiar código
+{
+  "name": "Juan",
+  "age": 30,
+  "city": "Madrid"
+}
+Esto agregará un nuevo documento a tu índice finytec-transactions.
+
+6. Eliminar un índice
+Si deseas eliminar un índice completo, puedes hacer una solicitud DELETE.
+
+Configuración:
+Método: DELETE
+URL: http://localhost:9200/finytec-transactions
+Esto eliminará el índice finytec-transactions y todos los datos contenidos en él.
+
+Resumen de Solicitudes Comunes:
+GET http://localhost:9200/ – Verificar que Elasticsearch está funcionando.
+GET http://localhost:9200/_cat/indices?v – Listar todos los índices.
+GET http://localhost:9200/finytec-transactions/_search – Obtener todos los documentos de un índice.
+POST http://localhost:9200/finytec-transactions/_search – Buscar documentos con criterios específicos.
+POST http://localhost:9200/finytec-transactions/_doc/ – Crear un nuevo documento en un índice.
+DELETE http://localhost:9200/finytec-transactions – Eliminar un índice.
+Estos son los comandos más básicos que puedes ejecutar en Postman para trabajar con Elasticsearch y ver su contenido.
+
+

@@ -1,0 +1,49 @@
+
+-- INICIAR KAFKA
+ bin\windows\zookeeper-server-start.bat config\zookeeper.properties
+ bin\windows\kafka-server-start.bat config\server.properties
+
+-- CREAR TOPIC
+bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --create --topic finytec-topic --partitions 5 --replication-factor 1
+
+bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --create --topic finytec-transactions --partitions 5 --replication-factor 4
+
+
+-- LISTAR TOPIC
+bin\windows\kafka-topics.bat --list --bootstrap-server localhost:9092
+
+-- VER DEFINICION DE UN TOPIC
+bin\windows\kafka-topics.bat --describe --topic finytec-topic --bootstrap-server localhost:9092
+bin\windows\kafka-topics.bat --describe --topic finytec-transactions --bootstrap-server localhost:9092
+
+-- MODIFICANDO UN TOPIC
+bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --alter --topic finytec-topic --partitions 10 
+
+
+-- VERIFICANDO CONFIGURACION VALIDAS PARA EL TOPIC
+bin\windows\kafka-configs.bat --bootstrap-server localhost:9092 --entity-type topics --entity-name finytec-topic --describe
+
+bin\windows\kafka-configs.bat --bootstrap-server localhost:9092 --entity-type topics --entity-name finytec-transactions --describe
+
+-- AGREGANDO CONFIGURACIONES A UN TOPIC
+bin\windows\kafka-configs.bat --bootstrap-server localhost:9092 --entity-type topics --entity-name finytec-topic --alter --add-config x=y (ERROR x no es un elemento de configs del topico)
+
+bin\windows\kafka-configs.bat --bootstrap-server localhost:9092 --entity-type topics --entity-name finytec-topic --alter --add-config retention.ms=604800000
+
+
+--BORRANDO UN TOPIC
+bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --delete --topic finytec-topic
+
+-- CREAR PRODUCER
+bin\windows\kafka-console-producer.bat  --topic finytec-topic  --bootstrap-server localhost:9092
+
+bin\windows\kafka-console-producer.bat  --topic finytec-transactions  --bootstrap-server localhost:9092
+
+-- CREAR CONSUMER
+bin\windows\kafka-console-consumer.bat  --topic finytec-topic --from-beginning  --bootstrap-server localhost:9092 --property print.key=true --property key.separator="-"
+
+bin\windows\kafka-console-consumer.bat  --topic finytec-transactions --from-beginning  --bootstrap-server localhost:9092 --property print.key=true --property key.separator="-"
+
+
+-- BORRAR INFORMACION
+rm -rf \tmp\kafka-logs \tmp\zookeeper
