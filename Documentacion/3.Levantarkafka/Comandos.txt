@@ -1,0 +1,82 @@
+0. Ejecutar en Git.bash
+
+cd C:\kafka_2.12-3.8.0
+
+1. Linux
+
+sh bin/zookeeper-server-start.sh config/zookeeper.properties
+
+1.1 Windows
+
+.\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+
+.\bin\windows \kafka-topics.sh --create --topic quickstart-events --bootstrap-server localhost:9092
+2. Linux
+
+sh bin/kafka-server-start.sh config/server.properties
+
+2.1 Windows
+
+.\bin\windows\kafka-server-start.bat .\config\server.properties
+
+Ejecuta el siguiente comando para levantar los servicios de Kafka y Zookeeper
+
+docker-compose up -d
+
+Verifica que los contenedores están corriendo con:
+
+docker ps
+
+CONTAINER ID        IMAGE                           COMMAND                  CREATED             STATUS              PORTS                                         NAMES
+a1b2c3d4e5f6        confluentinc/cp-kafka:7.0.1     "/etc/confluent/dock…"   X seconds ago       Up X seconds        0.0.0.0:9092->9092/tcp                        kafka-docker_kafka_1
+b1c2d3e4f5g6        confluentinc/cp-zookeeper:7.0.1 "/etc/confluent/dock…"   X seconds ago       Up X seconds        0.0.0.0:2181->2181/tcp                        kafka-docker_zookeeper_1
+
+
+1. Crear un topic
+
+docker exec -it 5kafka-docker-kafka-1 kafka-topics --create --topic finytec-topic --bootstrap-server localhost:9092 --partitions 5 --replication-factor 1
+
+docker exec -it 5ms-kafka-1 kafka-topics --create --topic finytec-topic --bootstrap-server localhost:9092 --partitions 5 --replication-factor 1
+
+2. Listar los topics
+
+docker exec -it 4kafka-docker-kafka-1 kafka-topics --list --bootstrap-server localhost:9092
+
+docker exec -it 5ms-kafka-1 kafka-topics --list --bootstrap-server localhost:9092
+
+3. Producir mensajes
+
+docker exec -it 4kafka-docker-kafka-1 kafka-console-producer --topic finytec-topic --bootstrap-server localhost:9092
+
+docker exec -it 4kafka-docker-kafka-1 kafka-console-producer --topic finytec-topic --bootstrap-server localhost:9092
+
+
+
+4. Consumir mensajes
+
+docker exec -it 4kafka-docker-kafka-1 kafka-console-consumer --topic finytec-topic --from-beginning --bootstrap-server localhost:9092
+
+docker exec -it 5ms-kafka-1 kafka-console-consumer --topic finytec-topic --from-beginning --bootstrap-server localhost:9092
+
+- Con PROPERTY:
+
+docker exec -it 4kafka-docker-kafka-1 kafka-console-consumer --topic finytec-topic --from-beginning --bootstrap-server localhost:9092 --property print.key=true --property key.separator="-"
+
+docker exec -it 5ms-kafka-1 kafka-console-consumer --topic finytec-topic --from-beginning --bootstrap-server localhost:9092 --property print.key=true --property key.separator="-"
+
+Paso 5: Detener Kafka y Zookeeper
+
+docker-compose down
+
+
+ENVIAR MENSAJE
+
+kafka-console-producer --broker-list localhost:9092 --topic customer_topic
+
+kafka-topics --bootstrap-server localhost:9092 --delete --topic customer_topic
+
+
+
+
+
+

@@ -1,0 +1,95 @@
+DESDE CLUSTER KAFKA SE OBTIENEN LAS SIGUIENTES URL
+Plaintext
+b-3.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092,
+b-1.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092,b-4.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092
+-
+-
+TLS
+b-3.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9094,
+b-1.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9094,b-4.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9094
+
+
+Comando deTerminal. 
+
+1.- Antes de creara EC2
+
+bin/kafka-topics.sh --list --bootstrap-server b-1.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092,b-4.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092
+
+2.- Despues de creada EC2
+
+conexion a la maquina EC2 (se va al DNS public)
+
+	ec2-3-16-152-219.us-east-2.compute.amazonaws.com
+
+ssh -i devs4j-key.pem ec2-user@ec2-3-16-152-219.us-east-2.compute.amazonaws.com
+
+3. DESCARGAR KAFKA PARA INSTALAR EN EC2
+
+wget https://downloads.apache.org/kafka/3.8.0/kafka_2.12-3.8.0.tgz
+
+tar -xvf kafka_2.12-3.8.0.tgz
+
+LUEGO SE VUELEVE A EJECUTAR EN EC2 CON KAFKA INSTALADO:
+
+bin/kafka-topics.sh --list --bootstrap-server b-1.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092,b-4.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092
+
+4.-Cracion de Topics
+bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic finytec-transactions --partitions 5 --replication-factor 4
+
+bin/kafka-topics.sh --bootstrap-server b-1.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092,b-4.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092 --create --topic finytec-transactions --partitions 5 --replication-factor 4
+
+
+bin/kafka-topics.sh --describe --topic finytec-transactions --bootstrap-server localhost:9092
+
+bin/kafka-topics.sh --describe --topic finytec-transactions --bootstrap-server b-1.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092,b-4.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092
+
+5.- PROBANDO PRODUCER Y CONSUMER.
+
+	DESDE EL TERMINAL DE EC2
+	
+5.1- Producer
+
+ssh -i devs4j-key.pem ec2-user@ec2-3-16-152-219.us-east-2.compute.amazonaws.com
+
+ingresar al dir de Kafka
+
+bin/kafka-console-producer.sh  --topic finytec-transactions  --bootstrap-server localhost:9092
+
+bin/kafka-console-producer.sh  --topic finytec-transactions  --bootstrap-server b-1.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092,b-4.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092
+5.2 Consumer
+
+ssh -i devs4j-key.pem ec2-user@ec2-3-16-152-219.us-east-2.compute.amazonaws.com
+
+ingresar al dir de Kafka
+
+bin/kafka-console-consumer.sh  --topic finytec-transactions --from-beginning  --bootstrap-server  b-1.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092,b-4.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092 --property print.key=true --property key.separator="-"
+
+
+EJEMPLO PRACTICO EN CODIGO FUENTE DE finytec-transactions
+
+
+APUNTAR A b-1.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092,b-4.clusterdevs4j.g73j69.c3.kafka.us-east-2.amazonaws.com:9092
+
+GENERAR JAR DE LA APLICACION (mvn clean install)
+
+/home/jhba/Escritorio/Zud/Kafka/dev4j/finytec-transactions/target/finytec-transactions-0.0.1-SNAPSHOT.jar
+
+DESDE EQUIPO LOCAL
+
+
+scp -i devs4j-key.pem /home/jhba/Escritorio/Zud/Kafka/dev4j/finytec-transactions/target/finytec-transactions-0.0.1-SNAPSHOT.jar ec2-user@ec2-3-16-152-219.us-east-2.compute.amazonaws.com:finytec-transactions.jar
+
+conectarse a EC2 y ejecutar java -jar finytec-transactions.jar
+
+CREAR ELASTICSEARCH
+
+usuario : dev4js
+password: Jhba++1962
+
+
+
+2024-10-04T03:29:22.951Z ERROR 37755 --- [finytec-transactions] [ient-0-thread-2] c.k.f.t.FinytecTransactionsApplication   : Error string message  Unable to parse response body for Response{requestLine=PUT /finytec-transactions/_doc/2-li.mclaughlin-38653?timeout=1m HTTP/1.1, host=https://search-devs4j-yfrxffrvnwubhjldzvf4urpu4e.us-east-2.es.amazonaws.com:443, response=HTTP/1.1 201 Created}
+
+
+
+	
