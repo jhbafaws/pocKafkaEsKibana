@@ -1,0 +1,106 @@
+Configuracion de Camel para log
+
+Descargar logstash-8.15.2
+
+Generar archivo logstash.conf con el siguiente codigo
+
+input {
+    tcp {
+        port => 5044
+        codec => json_lines
+    }
+}
+
+output {
+    elasticsearch {
+        hosts => ["http://localhost:9200"]
+    }
+}
+
+
+ Iniciar Logstash con la configuración en Windows
+
+cd C:logstash-8.15.2
+bin\logstash.bat -f C:logstash-8.15.2\config\logstash.conf
+
+El argumento -f especifica la ruta del archivo de configuración.
+Si todo está bien configurado, Logstash debería estar escuchando en el puerto 5044 y enviando los logs a Elasticsearch en localhost:9200.
+
+Verificación
+Revisar Logstash: Revisa en la terminal si ves que Logstash está corriendo sin errores.
+Conexión a Elasticsearch: Asegúrate de que tu instancia de Elasticsearch esté corriendo en localhost:9200 y que los datos estén siendo enviados correctamente.
+Visualizar en Kibana: Una vez que los logs estén en Elasticsearch, usa Kibana para visualizarlos.
+
+
+EJEMPLO DE USO
+
+import org.apache.camel.builder.RouteBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+@Component
+public class SimpleCamelRoute extends RouteBuilder {
+
+    // Crear logger
+    private static final Logger logger = LoggerFactory.getLogger(SimpleCamelRoute.class);
+
+    @Override
+    public void configure() throws Exception {
+        // Definir una ruta Camel que genere logs
+        from("timer:logExample?period=5000")
+            .routeId("logRoute")
+            .process(exchange -> {
+                // Logear dentro de la ruta
+                logger.info("Procesando mensaje en Camel. ID de intercambio: {}", exchange.getExchangeId());
+            })
+            .to("log:info"); // Enviar el mensaje a un logger de Camel también
+    }
+}
+
+
+
+Pasos para visualizar los logs en Kibana:
+1. Configurar el output de Logstash
+En el archivo de configuración de Logstash (logstash.conf), asegúrate de definir un output para Elasticsearch. Esto le indica a Logstash dónde enviar los logs y bajo qué índice almacenarlos. Aquí un ejemplo:
+
+plaintext
+Copiar código
+output {
+    elasticsearch {
+        hosts => ["http://localhost:9200"]  # Cambia a la dirección de tu instancia de Elasticsearch
+        index => "springboot-logs-%{+YYYY.MM.dd}"  # Esto crea un nuevo índice cada día
+    }
+}
+El valor index define cómo se llamarán los índices en Elasticsearch. En este ejemplo, se está configurando para que los logs se guarden en índices con el formato springboot-logs-YYYY.MM.dd, lo que creará un nuevo índice diariamente.
+Alternativa: Puedes personalizar este valor según tus necesidades, por ejemplo, por servicio, aplicación o tipo de log.
+2. Crear el índice en Kibana
+Una vez que los logs empiecen a ser enviados a Elasticsearch, debes crear un pattern de índice en Kibana para poder visualizar esos datos.
+
+Abrir Kibana: Accede a la interfaz de Kibana en http://localhost:5601 (o el puerto que tengas configurado).
+
+Crear un patrón de índice:
+
+Ve a Stack Management > Index Patterns.
+Haz clic en Create Index Pattern.
+En el campo de nombre, ingresa el patrón que coincida con los índices que estás creando, por ejemplo: springboot-logs-*.
+Elige el campo de timestamp que deseas usar (normalmente @timestamp si los logs tienen un campo de tiempo asociado).
+Explorar los logs:
+
+Una vez creado el patrón, ve a la sección de Discover en Kibana.
+Selecciona el índice que creaste (springboot-logs-*).
+Ahora podrás explorar los logs enviados por Logstash a Elasticsearch.
+3. Visualizar y analizar los logs
+Kibana te permite usar una gran variedad de herramientas para visualizar y analizar los logs:
+
+Discover: para buscar y filtrar logs en tiempo real.
+Visualizations: puedes crear gráficos basados en las métricas de los logs.
+Dashboards: puedes crear dashboards personalizados con varias visualizaciones de los logs.
+Nota sobre indices o topics
+En Elasticsearch los datos se organizan en índices. No necesitas trabajar con topics (que suelen referirse a sistemas de mensajería como Kafka) en este contexto. Los índices son creados automáticamente por Logstash según la configuración que definas en el archivo de configuración (logstash.conf).
+
+Resumen del flujo:
+Los logs de tu aplicación Spring Boot son enviados a Logstash.
+Logstash procesa y envía esos logs a Elasticsearch.
+Elasticsearch almacena los logs en índices.
+Kibana consulta esos índices para visualizar y analizar los logs.
