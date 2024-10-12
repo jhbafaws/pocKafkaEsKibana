@@ -72,7 +72,6 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>7.0.1.Final</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -93,6 +92,27 @@
             <artifactId>tomcat-embed-core</artifactId>
             <version>10.1.30</version>
         </dependency>
+
+		<!-- Apache Camel Core for Spring Boot -->
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-spring-boot-starter</artifactId>
+			<version>3.20.0</version>
+		</dependency>
+
+		<!-- Logback for Logging -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.4.6</version>
+		</dependency>
+
+		<!-- Logstash Logback Encoder (to send logs to Elasticsearch) -->
+		<dependency>
+			<groupId>net.logstash.logback</groupId>
+			<artifactId>logstash-logback-encoder</artifactId>
+			<version>7.2</version>
+		</dependency>
     </dependencies>
 
 	<build>

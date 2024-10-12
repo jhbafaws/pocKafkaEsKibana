@@ -8,6 +8,8 @@ import com.kafka.poc.user.service.infrastructure.dto.ActivityDto;
 import com.kafka.poc.user.service.infrastructure.dto.UserDto;
 import com.kafka.poc.user.service.infrastructure.exception.BadRequestException;
 import com.kafka.poc.user.service.infrastructure.usecase.IUserCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.util.Optional;
 @Service
 public class UserCaseImpl implements IUserCase {
 
+    private static final Logger log = LoggerFactory.getLogger(UserCaseImpl.class);
 
     @Autowired
     IUserService iUserService;
@@ -27,6 +30,7 @@ public class UserCaseImpl implements IUserCase {
 
   //      findbyEmail(userDto.getEmail());
 
+        log.info("Input Service createUser: {}", userDto);
 
         User userEntity = new User();
         userEntity.setUserName(userDto.getUserName());
@@ -66,7 +70,7 @@ public class UserCaseImpl implements IUserCase {
         }
 
         resp.setActivities(list);
-
+        log.info("Output Service createUser: {}", resp);
         return resp;
     }
 
