@@ -32,7 +32,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"paul\",\n  \"lastName\": \"Bravo\",\n  \"email\": \"jhba@correo.cl\",\n  \"userName\": \"johndxxoe\",\n  \"activities\": [\n    {\n      \"type\": \"Running Type\",\n      \"description\": \"Running\"\n    },\n    {\n            \"type\": \"Swimming Type\",\n      \"description\": \"Swimming\"\n    }\n  ]\n}\n",
+							"raw": "{\n  \"name\": \"paulx1\",\n  \"lastName\": \"Bravo\",\n  \"email\": \"jhbxa@correo.cl\",\n  \"userName\": \"johndxxoe\",\n  \"activities\": [\n    {\n      \"type\": \"Running Type\",\n      \"description\": \"Running\"\n    },\n    {\n            \"type\": \"Swimming Type\",\n      \"description\": \"Swimming\"\n    }\n  ]\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -190,14 +190,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9200/finytec-transactions/_search",
+							"raw": "http://localhost:9200/application-logs/_search",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "9200",
 							"path": [
-								"finytec-transactions",
+								"application-logs",
 								"_search"
 							]
 						}
@@ -383,6 +383,112 @@
 			]
 		},
 		{
+			"name": "Camel",
+			"item": [
+				{
+					"name": "CrearIndiceLogs",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9200/application-logs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"application-logs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "logstach",
+			"item": [
+				{
+					"name": "ActualizaTempñate",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"index_patterns\": [\"user-service-logs-*\"],\r\n  \"settings\": {\r\n    \"number_of_shards\": 1\r\n  },\r\n  \"mappings\": {\r\n    \"properties\": {\r\n      \"message\": {\r\n        \"type\": \"text\"\r\n      },\r\n      \"loglevel\": {\r\n        \"type\": \"keyword\"\r\n      },\r\n      \"timestamp\": {\r\n        \"type\": \"date\"\r\n      }\r\n    }\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9200/_template/user_service_template",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"_template",
+								"user_service_template"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createmplate",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"index_patterns\": [\"search-service-logs-*\"],\r\n  \"settings\": {\r\n    \"number_of_shards\": 1\r\n  },\r\n  \"mappings\": {\r\n    \"properties\": {\r\n      \"text\": {\r\n        \"type\": \"text\"  // Reemplaza \"match_only_text\" con \"text\"\r\n      }\r\n    }\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9200/_template/springboot_template",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"_template",
+								"springboot_template"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getTemplatews",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9200/_template",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"_template"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "http://localhost:9200/_security/user/kibana_system/_password",
 			"request": {
 				"auth": {
@@ -469,14 +575,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:9200/finytec-transactions/_doc/",
+					"raw": "http://localhost:9200/application-logs/_doc/",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "9200",
 					"path": [
-						"finytec-transactions",
+						"application-logs",
 						"_doc",
 						""
 					]
