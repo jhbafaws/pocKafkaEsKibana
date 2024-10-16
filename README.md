@@ -279,3 +279,100 @@ POC kafka elasticsearch kibana
     
     elasticsearch.username: "kibana_system"
     elasticsearch.password: "gab97dan99"
+
+## Logstash
+
+### Version logstash-8.15.2
+
+#### logstash.conf
+
+#### inicio de servicio:  .\logstash.bat -f config\logstash.conf
+
+    input {
+    # Entrada para user-service
+    tcp {
+    port => 5044  # Puerto para user-service
+    codec => json_lines
+    type => "user-service"
+    }
+    
+        # Entrada para user-event-consumer
+        tcp {
+            port => 5045  # Puerto para user-event-consumer
+            codec => json_lines
+            type => "user-event-consumer"
+        }
+        # Entrada para search-service
+        tcp {
+            port => 5046  # Puerto para user-event-consumer
+            codec => json_lines
+            type => "search-service"
+        }
+        # Entrada para transaction-producer
+        tcp {
+            port => 5047  # Puerto para transaction-producer
+            codec => json_lines
+            type => "transaction-producer"
+        }
+        # Entrada para transaction-consumer
+        tcp {
+            port => 5048  # Puerto para transaction-consumer
+            codec => json_lines
+            type => "transaction-consumer"
+        }
+    }
+    
+    filter {
+    # Filtro de timestamp para ambos servicios
+    date {
+    match => ["timestamp", "ISO8601"]  # Asegúrate de que tu campo de timestamp esté en formato ISO
+    target => "@timestamp"
+    }
+    }
+    
+    output {
+    # Salida a Elasticsearch para user-service
+    if [type] == "user-service" {
+    elasticsearch {
+    hosts => ["http://localhost:9200"]
+    index => "user-service-logs-%{+YYYY.MM.dd}"
+    manage_template => false  # Desactiva la instalación de la plantilla predeterminada
+    }
+    }
+    
+        # Salida a Elasticsearch para user-event-consumer
+        if [type] == "user-event-consumer" {
+            elasticsearch {
+                hosts => ["http://localhost:9200"]
+                index => "user-event-consumer-logs-%{+YYYY.MM.dd}"
+                manage_template => false  # Desactiva la instalación de la plantilla predeterminada
+            }
+        }
+        # Salida a Elasticsearch para search-service
+        if [type] == "search-service" {
+            elasticsearch {
+                hosts => ["http://localhost:9200"]
+                index => "search-service-logs-%{+YYYY.MM.dd}"
+                manage_template => false  # Desactiva la instalación de la plantilla predeterminada
+            }
+        }
+    
+        # Salida a Elasticsearch para transaction-producer
+        if [type] == "transaction-producer" {
+            elasticsearch {
+                hosts => ["http://localhost:9200"]
+                index => "transaction-producer-logs-%{+YYYY.MM.dd}"
+                manage_template => false  # Desactiva la instalación de la plantilla predeterminada
+            }
+        }
+    # Salida a Elasticsearch para transaction-consumer
+        if [type] == "transaction-consumer" {
+            elasticsearch {
+                hosts => ["http://localhost:9200"]
+                index => "transaction-consumer-logs-%{+YYYY.MM.dd}"
+                manage_template => false  # Desactiva la instalación de la plantilla predeterminada
+            }
+        }
+    }
+
+
