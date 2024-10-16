@@ -1,0 +1,80 @@
+
+
+En Windows, puedes ejecutar servicios como Kafka, Elasticsearch, Kibana y Logstash sin tener que dejarlos abiertos en una terminal, configurándolos como servicios del sistema que se inician automáticamente al arrancar el sistema operativo o se ejecutan en segundo plano.
+
+Aquí te explico los pasos generales para cada uno de ellos:
+
+1. Kafka como servicio en Windows
+Kafka no incluye por defecto una manera directa de instalarse como servicio en Windows. Sin embargo, puedes usar la utilidad nssm (Non-Sucking Service Manager), que te permite ejecutar cualquier aplicación como un servicio.
+
+Pasos:
+Descarga nssm desde su sitio oficial.
+Extrae nssm en una carpeta (por ejemplo, C:\nssm).
+Abre una ventana de terminal con permisos de administrador.
+Luego, registra Kafka como un servicio:
+
+bash
+Copiar código
+nssm install Kafka
+Se abrirá una ventana donde debes configurar lo siguiente:
+
+Path: La ruta al ejecutable de Kafka, por ejemplo: C:\kafka\bin\windows\kafka-server-start.bat
+Startup directory: El directorio de Kafka, por ejemplo: C:\kafka
+Finalmente, puedes arrancar el servicio de Kafka con:
+
+bash
+Copiar código
+nssm start Kafka
+2. Elasticsearch como servicio en Windows
+Elasticsearch incluye una manera directa de instalarse como servicio en Windows.
+
+Pasos:
+Si ya tienes Elasticsearch descargado y configurado, ve al directorio bin dentro de tu instalación de Elasticsearch.
+Ejecuta el siguiente comando en una ventana de terminal con permisos de administrador:
+bash
+Copiar código
+elasticsearch-service.bat install
+Esto instalará Elasticsearch como un servicio de Windows. Puedes controlar el servicio (arrancarlo, detenerlo, etc.) usando:
+
+bash
+Copiar código
+elasticsearch-service.bat start
+elasticsearch-service.bat stop
+3. Kibana como servicio en Windows
+Kibana también proporciona un script para instalarse como servicio.
+
+Pasos:
+Navega al directorio bin de tu instalación de Kibana.
+Ejecuta el siguiente comando en una terminal con permisos de administrador:
+bash
+Copiar código
+kibana.bat install-service
+Una vez instalado, puedes controlar el servicio con los comandos:
+
+bash
+Copiar código
+kibana.bat start-service
+kibana.bat stop-service
+4. Logstash como servicio en Windows
+Logstash no tiene un script nativo para instalarse como servicio en Windows, pero puedes hacerlo usando nssm, de manera similar a Kafka.
+
+Pasos:
+Usa nssm para registrar Logstash como servicio.
+bash
+Copiar código
+nssm install Logstash
+En la ventana que aparece, completa los siguientes campos:
+
+Path: La ruta al ejecutable de Logstash, por ejemplo: C:\logstash\bin\logstash.bat
+Startup directory: El directorio de Logstash, por ejemplo: C:\logstash
+Luego, puedes arrancar el servicio de Logstash con:
+
+bash
+Copiar código
+nssm start Logstash
+Resumen
+Para cada uno de estos servicios:
+
+Kafka y Logstash pueden registrarse como servicios usando nssm.
+Elasticsearch y Kibana tienen scripts nativos para instalarse como servicios.
+Una vez configurados, estos servicios se ejecutarán en segundo plano y se podrán gestionar desde el administrador de servicios de Windows (services.msc). También puedes configurar que se inicien automáticamente al arrancar el sistema desde el mismo administrador de servicios.

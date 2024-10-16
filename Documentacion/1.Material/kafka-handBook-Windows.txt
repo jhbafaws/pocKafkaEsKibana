@@ -1,4 +1,5 @@
 
+
 -- INICIAR KAFKA
  bin\windows\zookeeper-server-start.bat config\zookeeper.properties
  bin\windows\kafka-server-start.bat config\server.properties
@@ -8,6 +9,7 @@ bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --create --topic 
 
 bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --create --topic finytec-transactions --partitions 5 --replication-factor 4
 
+bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --create --topic transaction-producer --partitions 5 --replication-factor 4
 
 -- LISTAR TOPIC
 bin\windows\kafka-topics.bat --list --bootstrap-server localhost:9092
@@ -15,6 +17,9 @@ bin\windows\kafka-topics.bat --list --bootstrap-server localhost:9092
 -- VER DEFINICION DE UN TOPIC
 bin\windows\kafka-topics.bat --describe --topic finytec-topic --bootstrap-server localhost:9092
 bin\windows\kafka-topics.bat --describe --topic finytec-transactions --bootstrap-server localhost:9092
+
+bin\windows\kafka-topics.bat --describe --topic bank-transactions --bootstrap-server localhost:9092
+
 
 -- MODIFICANDO UN TOPIC
 bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --alter --topic finytec-topic --partitions 10 
@@ -44,6 +49,12 @@ bin\windows\kafka-console-consumer.bat  --topic finytec-topic --from-beginning  
 
 bin\windows\kafka-console-consumer.bat  --topic finytec-transactions --from-beginning  --bootstrap-server localhost:9092 --property print.key=true --property key.separator="-"
 
+bin\windows\kafka-console-consumer.bat  --topic bank-transactions --from-beginning  --bootstrap-server localhost:9092 --property print.key=true --property key.separator="-"
+
 
 -- BORRAR INFORMACION
 rm -rf \tmp\kafka-logs \tmp\zookeeper
+
+-- LOGSTASH
+
+.\logstash.bat -f config\logstash.conf
