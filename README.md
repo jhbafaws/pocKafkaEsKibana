@@ -284,9 +284,9 @@ POC kafka elasticsearch kibana
 
 ### Version logstash-8.15.2
 
-#### logstash.conf
-
 #### inicio de servicio:  .\logstash.bat -f config\logstash.conf
+
+#### logstash.conf
 
     input {
     # Entrada para user-service
